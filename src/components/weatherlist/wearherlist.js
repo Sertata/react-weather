@@ -6,7 +6,7 @@ import './wether.css'
 
 const Wearherlist = ({ result }) => {
   const [detailWeatherDay, setDetailWeatherDay] = useState(null);
-  //const [keyItem,setKeyItem] = useState('')
+  
 
   return result.map((item) => {
     const tempOptions = String.fromCharCode(8451);
@@ -15,22 +15,28 @@ const Wearherlist = ({ result }) => {
       (e) => `http://openweathermap.org/img/wn/${e.icon}@2x.png`
     );
    
+   
     if (item.dt_txt.slice(-8) === '12:00:00') {
+      const dateNow = item.dt_txt.slice(0,11)
+      const res=result.filter(elem=>elem.dt_txt.slice(0,11)===dateNow)
+      
       return (
         <div className="weather" key={item.dt}>
-          <img src={icon}></img>
-          <p>{item.dt_txt}</p>
-          <p>
-            {(item.main.temp - 273.15).toFixed(2)}
-            {tempOptions}
-          </p>
-          <p>{description}</p>
-          <button
-            id={item.dt}
-            onClick={({ target }) => setDetailWeatherDay(target.id)}>
-            Details
+          <div>
+            <img src={icon}></img>
+            <p>{item.dt_txt}</p>
+            <p>
+              {(item.main.temp - 273.15).toFixed(2)}
+              {tempOptions}
+            </p>
+            <p>{description}</p>
+            <button id={item.dt} onClick={() => setDetailWeatherDay(dateNow)}>
+              Details
             </button>
-          {detailWeatherDay && <DetailWeather res={detailWeatherDay}  />}
+          </div>
+          <div>
+            {dateNow === detailWeatherDay && <DetailWeather res={res} />}
+          </div>
         </div>
       );
     }
